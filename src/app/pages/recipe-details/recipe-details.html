@@ -1,0 +1,63 @@
+<div class="recipe-details">
+
+  <!-- Image -->
+  <img class="recipe-image" [src]="recipe.image" alt="Recipe Image" />
+
+  <!-- Title + Rating + Meta -->
+  <div class="header-row">
+    <h1>{{ recipe.title }}</h1>
+
+    <app-rating
+      [(score)]="recipe.rating"
+      (scoreChange)="onRatingChanged($event)"
+    ></app-rating>
+  </div>
+
+  <p class="byline" *ngIf="author">
+    Posted by
+    <a [routerLink]="['/users', author.id]">
+      {{ author.name }}
+    </a>
+  </p>
+
+  <p class="meta">
+    <span *ngIf="recipe.cuisine">{{ recipe.cuisine }}</span>
+    <span *ngIf="recipe.cookTimeMinutes">
+      · {{ recipe.cookTimeMinutes }} min
+    </span>
+    <span *ngIf="recipe.calories">
+      · {{ recipe.calories }} kcal
+    </span>
+  </p>
+
+  <!-- Description -->
+  <p class="description">{{ recipe.description }}</p>
+
+  <hr />
+
+  <!-- Ingredients -->
+  <h2>Ingredients</h2>
+  <ul>
+    <li *ngFor="let ing of recipe.ingredients">{{ ing }}</li>
+  </ul>
+
+  <hr />
+
+  <!-- Steps -->
+  <h2>Steps</h2>
+  <ol>
+    <li *ngFor="let step of recipe.steps">{{ step }}</li>
+  </ol>
+
+  <hr />
+
+  <!-- Likes / Save -->
+  <div class="actions-row">
+    <button class="pill" (click)="toggleLike()">
+      ❤️ {{ recipe.likes }} likes
+    </button>
+    <button class="pill" (click)="toggleSave()">
+      {{ isSaved ? 'Saved' : 'Save for later' }}
+    </button>
+  </div>
+</div>

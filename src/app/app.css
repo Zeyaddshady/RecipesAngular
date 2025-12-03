@@ -1,0 +1,43 @@
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.left-links,
+.right-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.top-nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.top-nav a:hover {
+  color: #ff5a5f;
+}
+
+.main-shell {
+  padding: 16px;
+}
+
+.link-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+}
+
+.link-button:hover {
+  color: #ff5a5f;
+}
+
+

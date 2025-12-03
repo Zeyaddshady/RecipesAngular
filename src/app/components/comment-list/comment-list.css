@@ -1,0 +1,17 @@
+.comments {
+  margin-top: 12px;
+}
+
+.comment {
+  margin-bottom: 8px;
+}
+
+.comment p {
+  margin: 0;
+}
+
+.comment small {
+  color: #777;
+}
+
+

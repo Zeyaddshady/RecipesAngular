@@ -1,0 +1,7 @@
+<div class="comments">
+  <div *ngFor="let c of comments" class="comment">
+    <p>{{ c.text }}</p>
+    <small>{{ c.date | date:'short' }}</small>
+    <hr />
+  </div>
+</div>

@@ -1,0 +1,70 @@
+.planner-container {
+  max-width: 980px;
+  margin: 32px auto;
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+}
+
+.subtitle {
+  color: #717171;
+  margin-bottom: 20px;
+}
+
+.table {
+  border-radius: 16px;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+
+.header-row,
+.row {
+  display: grid;
+  grid-template-columns: 140px repeat(4, minmax(0, 1fr));
+}
+
+.cell {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f3f3f3;
+  font-size: 14px;
+}
+
+.header-row .cell {
+  background: #f7f7f7;
+  font-weight: 600;
+}
+
+.day-col {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+select {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.shopping-list {
+  margin-top: 24px;
+}
+
+.shopping-list ul {
+  columns: 2;
+}
+
+@media (max-width: 900px) {
+  .header-row,
+  .row {
+    grid-template-columns: 120px repeat(4, minmax(0, 1fr));
+  }
+
+  .shopping-list ul {
+    columns: 1;
+  }
+}
+
+

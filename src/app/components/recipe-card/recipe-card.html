@@ -1,0 +1,27 @@
+<div class="card">
+  <img [src]="recipe.image" alt="recipe" class="thumb">
+
+  <div class="info">
+    <div class="top-row">
+      <p class="cuisine" *ngIf="recipe.cuisine">{{ recipe.cuisine }}</p>
+      <p class="rating">⭐ {{ recipe.rating }}</p>
+    </div>
+
+    <p class="byline" *ngIf="authorId">
+      by
+      <a [routerLink]="['/users', authorId]" (click)="$event.stopPropagation()">
+        {{ authorName }}
+      </a>
+    </p>
+
+    <h3>{{ recipe.title }}</h3>
+
+    <p class="tags" *ngIf="recipe.tags.length">
+      {{ recipe.tags.join(' · ') }}
+    </p>
+
+    <p class="ingredients">
+      {{ recipe.ingredients.join(', ') }}
+    </p>
+  </div>
+</div>

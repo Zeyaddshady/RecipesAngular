@@ -1,0 +1,86 @@
+<div class="planner-container" *ngIf="auth.currentUser; else loginFirst">
+  <h1>Weekly meal planner</h1>
+  <p class="subtitle">
+    Choose recipes for each meal and we’ll build a shopping list for you.
+  </p>
+
+  <div class="table">
+    <div class="header-row">
+      <div class="cell day-col"></div>
+      <div class="cell">Breakfast</div>
+      <div class="cell">Lunch</div>
+      <div class="cell">Dinner</div>
+      <div class="cell">Snacks</div>
+    </div>
+
+    <div class="row" *ngFor="let day of days">
+      <div class="cell day-col">
+        {{ day | titlecase }}
+      </div>
+      <div class="cell">
+        <select
+          [ngModel]="getMealSlot(day)?.breakfast ?? null"
+          (ngModelChange)="updateSlot(day, 'breakfast', $event || null)"
+        >
+          <option [ngValue]="null">-</option>
+          <option *ngFor="let r of recipeOptions()" [ngValue]="r.id">
+            {{ r.title }}
+          </option>
+        </select>
+      </div>
+      <div class="cell">
+        <select
+          [ngModel]="getMealSlot(day)?.lunch ?? null"
+          (ngModelChange)="updateSlot(day, 'lunch', $event || null)"
+        >
+          <option [ngValue]="null">-</option>
+          <option *ngFor="let r of recipeOptions()" [ngValue]="r.id">
+            {{ r.title }}
+          </option>
+        </select>
+      </div>
+      <div class="cell">
+        <select
+          [ngModel]="getMealSlot(day)?.dinner ?? null"
+          (ngModelChange)="updateSlot(day, 'dinner', $event || null)"
+        >
+          <option [ngValue]="null">-</option>
+          <option *ngFor="let r of recipeOptions()" [ngValue]="r.id">
+            {{ r.title }}
+          </option>
+        </select>
+      </div>
+      <div class="cell">
+        <select
+          [ngModel]="getMealSlot(day)?.snacks ?? null"
+          (ngModelChange)="updateSlot(day, 'snacks', $event || null)"
+        >
+          <option [ngValue]="null">-</option>
+          <option *ngFor="let r of recipeOptions()" [ngValue]="r.id">
+            {{ r.title }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="shopping-list">
+    <h2>Shopping list</h2>
+    <p *ngIf="!shoppingList().length">
+      Add some recipes to your meal plan to see a shopping list.
+    </p>
+    <ul *ngIf="shoppingList().length">
+      <li *ngFor="let ing of shoppingList()">
+        {{ ing }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<ng-template #loginFirst>
+  <div class="planner-container">
+    <p>You need to be logged in to plan meals.</p>
+  </div>
+</ng-template>
+
+

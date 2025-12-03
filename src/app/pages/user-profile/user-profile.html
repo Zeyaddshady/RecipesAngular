@@ -1,0 +1,81 @@
+<div class="profile-container" *ngIf="viewingUser as user; else noUser">
+  <div class="header">
+    <div class="avatar" *ngIf="user.avatarUrl; else initials">
+      <img [src]="user.avatarUrl" [alt]="user.name" />
+    </div>
+    <ng-template #initials>
+      <div class="avatar initials">
+        {{ user.name[0] }}
+      </div>
+    </ng-template>
+
+    <div>
+      <h2>{{ user.name }}</h2>
+      <p class="email">{{ user.email }}</p>
+      <p class="bio" *ngIf="user.bio">{{ user.bio }}</p>
+      <button
+        class="pill-button"
+        *ngIf="!isOwnProfile"
+        (click)="toggleFollow()"
+      >
+        {{ isFollowing ? 'Unfollow' : 'Follow' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div>
+      <span class="number">{{ postedRecipes.length }}</span>
+      <span class="label">Recipes</span>
+    </div>
+    <div>
+      <span class="number">{{ user.followers.length }}</span>
+      <span class="label">Followers</span>
+    </div>
+    <div>
+      <span class="number">{{ user.following.length }}</span>
+      <span class="label">Following</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3 *ngIf="isOwnProfile; else otherHeading">Your recipes</h3>
+    <ng-template #otherHeading>
+      <h3>{{ user.name.split(' ')[0] }}'s recipes</h3>
+    </ng-template>
+    <div class="cards" *ngIf="postedRecipes.length; else noRecipes">
+      <div
+        class="card-link"
+        *ngFor="let r of postedRecipes"
+        [routerLink]="['/recipes', r.id]"
+      >
+        <app-recipe-card [recipe]="r"></app-recipe-card>
+      </div>
+    </div>
+    <ng-template #noRecipes>
+      <p>This user hasn’t posted any recipes yet.</p>
+    </ng-template>
+  </div>
+
+  <div class="section" *ngIf="isOwnProfile">
+    <h3>Saved recipes</h3>
+    <div class="cards" *ngIf="savedRecipes.length; else noSaved">
+      <div
+        class="card-link"
+        *ngFor="let r of savedRecipes"
+        [routerLink]="['/recipes', r.id]"
+      >
+        <app-recipe-card [recipe]="r"></app-recipe-card>
+      </div>
+    </div>
+    <ng-template #noSaved>
+      <p>You haven’t saved any recipes yet.</p>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #noUser>
+  <div class="profile-container">
+    <p>User not found.</p>
+  </div>
+</ng-template>

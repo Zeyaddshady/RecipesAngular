@@ -1,0 +1,68 @@
+<div class="create-container">
+  <h1>Share a new recipe</h1>
+
+  <div class="grid">
+    <div class="left">
+      <label>Title</label>
+      <input [(ngModel)]="title" placeholder="E.g. Spicy Veggie Tacos" />
+
+      <label>Description</label>
+      <textarea
+        [(ngModel)]="description"
+        rows="3"
+        placeholder="Short description of the dish"
+      ></textarea>
+
+      <label>Recipe photo</label>
+      <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+      <p class="error" *ngIf="imageError">{{ imageError }}</p>
+      <img *ngIf="imageData" [src]="imageData" alt="preview" class="preview" />
+
+      <div class="row">
+        <div>
+          <label>Cuisine</label>
+          <input [(ngModel)]="cuisine" placeholder="Italian, Asian,..." />
+        </div>
+        <div>
+          <label>Cook time (minutes)</label>
+          <input type="number" min="0" [(ngModel)]="cookTimeMinutes" />
+        </div>
+        <div>
+          <label>Calories (per serving)</label>
+          <input type="number" min="0" [(ngModel)]="calories" />
+        </div>
+      </div>
+
+      <label>Tags</label>
+      <input
+        [(ngModel)]="tagsText"
+        placeholder="Comma separated e.g. quick, vegetarian"
+      />
+    </div>
+
+    <div class="right">
+      <label>Ingredients (one per line)</label>
+      <textarea
+        [(ngModel)]="ingredientsText"
+        rows="6"
+        placeholder="2 cups of flour
+1 tbsp olive oil
+Salt and pepper"
+      ></textarea>
+
+      <label>Steps (one per line)</label>
+      <textarea
+        [(ngModel)]="stepsText"
+        rows="6"
+        placeholder="Preheat the oven...
+Mix all ingredients..."
+      ></textarea>
+    </div>
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <button class="primary" (click)="save()">Publish recipe</button>
+</div>
+
+

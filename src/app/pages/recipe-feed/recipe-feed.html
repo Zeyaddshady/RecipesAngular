@@ -1,0 +1,37 @@
+<div class="feed-container">
+  <h1>Recipe Feed</h1>
+  <p class="subtitle">Discover recipes shared by our community chefs.</p>
+
+  <div class="filters">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search by recipe, ingredient, or tag"
+      />
+    </div>
+
+    <div class="time-filter">
+      <label>Max cook time (minutes)</label>
+      <input
+        type="number"
+        min="0"
+        [(ngModel)]="maxCookTime"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+
+    <a class="new-recipe-link" routerLink="/recipes/new">+ Share a recipe</a>
+  </div>
+
+  <div class="cards">
+    <div
+      *ngFor="let r of filteredRecipes"
+      class="card-link"
+      [routerLink]="['/recipes', r.id]"
+    >
+      <app-recipe-card [recipe]="r"></app-recipe-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+.stars {
+  color: #ffb400;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.stars span {
+  margin-right: 2px;
+}
+
+.stars span.filled {
+  text-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.stars span {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.stars .filled {
+  color: gold;
+}
