@@ -60,4 +60,44 @@
       {{ isSaved ? 'Saved' : 'Save for later' }}
     </button>
   </div>
+  <hr />
+
+  <!-- Comments -->
+  <div class="comments-section">
+    <h2>Comments</h2>
+    <app-comment-input (submitComment)="onSubmitComment($event)"></app-comment-input>
+    <app-comment-list [comments]="comments"></app-comment-list>
+  </div>
+  
+  <hr />
+
+  <!-- Reviews -->
+  <div class="reviews-section">
+    <h2>Reviews</h2>
+
+    <div class="add-review">
+      <label>Your rating</label>
+      <app-rating [(score)]="newReviewRating"></app-rating>
+
+      <label>Your review</label>
+      <textarea [(ngModel)]="newReviewText" rows="3" placeholder="Share your experience..."></textarea>
+      <div class="review-actions">
+        <button class="primary" (click)="submitReview()">Submit review</button>
+      </div>
+    </div>
+
+    <div class="reviews-list" *ngIf="reviews.length > 0; else noReviews">
+      <div *ngFor="let r of reviews" class="review">
+        <div class="review-header">
+          <strong>{{ r.userName }}</strong>
+          <app-rating [score]="r.rating"></app-rating>
+        </div>
+        <p class="review-text">{{ r.text }}</p>
+        <small class="review-date">{{ r.createdAt | date:'short' }}</small>
+      </div>
+    </div>
+    <ng-template #noReviews>
+      <p>No reviews yet. Be the first to review this recipe.</p>
+    </ng-template>
+  </div>
 </div>

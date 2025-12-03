@@ -1,4 +1,4 @@
-<div class="profile-container" *ngIf="viewingUser as user; else noUser">
+<div class="profile-container" *ngIf="viewingUser as user; else noUserTpl">
   <div class="header">
     <div class="avatar" *ngIf="user.avatarUrl; else initials">
       <img [src]="user.avatarUrl" [alt]="user.name" />
@@ -29,52 +29,83 @@
       <span class="label">Recipes</span>
     </div>
     <div>
-      <span class="number">{{ user.followers.length }}</span>
+      <span class="number">{{ followers.length }}</span>
       <span class="label">Followers</span>
     </div>
     <div>
-      <span class="number">{{ user.following.length }}</span>
+      <span class="number">{{ following.length }}</span>
       <span class="label">Following</span>
     </div>
   </div>
 
-  <div class="section">
-    <h3 *ngIf="isOwnProfile; else otherHeading">Your recipes</h3>
-    <ng-template #otherHeading>
-      <h3>{{ user.name.split(' ')[0] }}'s recipes</h3>
-    </ng-template>
-    <div class="cards" *ngIf="postedRecipes.length; else noRecipes">
-      <div
-        class="card-link"
-        *ngFor="let r of postedRecipes"
-        [routerLink]="['/recipes', r.id]"
-      >
-        <app-recipe-card [recipe]="r"></app-recipe-card>
-      </div>
-    </div>
-    <ng-template #noRecipes>
-      <p>This user hasn’t posted any recipes yet.</p>
-    </ng-template>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button [class.active]="activeTab === 'recipes'" (click)="activeTab = 'recipes'">Recipes</button>
+    <button [class.active]="activeTab === 'followers'" (click)="activeTab = 'followers'">Followers</button>
+    <button [class.active]="activeTab === 'following'" (click)="activeTab = 'following'">Following</button>
+    <button *ngIf="isOwnProfile" [class.active]="activeTab === 'saved'" (click)="activeTab = 'saved'">Saved</button>
   </div>
 
-  <div class="section" *ngIf="isOwnProfile">
-    <h3>Saved recipes</h3>
-    <div class="cards" *ngIf="savedRecipes.length; else noSaved">
-      <div
-        class="card-link"
-        *ngFor="let r of savedRecipes"
-        [routerLink]="['/recipes', r.id]"
-      >
-        <app-recipe-card [recipe]="r"></app-recipe-card>
+  <!-- Tab Content -->
+  <div class="section" [ngSwitch]="activeTab">
+    <!-- Posted Recipes -->
+    <div *ngSwitchCase="'recipes'">
+      <div class="cards" *ngIf="postedRecipes.length > 0; else noRecipes">
+        <div class="card-wrapper" *ngFor="let r of postedRecipes">
+          <a class="card-link" [routerLink]="['/recipes', r.id]">
+            <app-recipe-card [recipe]="r"></app-recipe-card>
+          </a>
+          <button *ngIf="isOwnProfile" class="delete-button" (click)="deleteRecipe(r.id); $event.stopPropagation()">
+            &times;
+          </button>
+        </div>
       </div>
+      <ng-template #noRecipes>
+        <p>This user hasn’t posted any recipes yet.</p>
+      </ng-template>
     </div>
-    <ng-template #noSaved>
-      <p>You haven’t saved any recipes yet.</p>
-    </ng-template>
+
+    <!-- Followers -->
+    <div *ngSwitchCase="'followers'">
+      <div class="user-list" *ngIf="followers.length > 0; else noFollowers">
+        <a *ngFor="let follower of followers" [routerLink]="['/users', follower.id]" class="user-list-item">
+          <img [src]="follower.avatarUrl" [alt]="follower.name" class="avatar-small" />
+          <span>{{ follower.name }}</span>
+        </a>
+      </div>
+      <ng-template #noFollowers>
+        <p>This user has no followers yet.</p>
+      </ng-template>
+    </div>
+
+    <!-- Following -->
+    <div *ngSwitchCase="'following'">
+      <div class="user-list" *ngIf="following.length > 0; else noFollowing">
+        <a *ngFor="let followedUser of following" [routerLink]="['/users', followedUser.id]" class="user-list-item">
+          <img [src]="followedUser.avatarUrl" [alt]="followedUser.name" class="avatar-small" />
+          <span>{{ followedUser.name }}</span>
+        </a>
+      </div>
+      <ng-template #noFollowing>
+        <p>This user isn't following anyone yet.</p>
+      </ng-template>
+    </div>
+
+    <!-- Saved Recipes -->
+    <div *ngSwitchCase="'saved'">
+      <div class="cards" *ngIf="savedRecipes.length > 0; else noSaved">
+        <a class="card-link" *ngFor="let r of savedRecipes" [routerLink]="['/recipes', r.id]">
+          <app-recipe-card [recipe]="r"></app-recipe-card>
+        </a>
+      </div>
+      <ng-template #noSaved>
+        <p>You haven’t saved any recipes yet.</p>
+      </ng-template>
+    </div>
   </div>
 </div>
 
-<ng-template #noUser>
+<ng-template #noUserTpl>
   <div class="profile-container">
     <p>User not found.</p>
   </div>

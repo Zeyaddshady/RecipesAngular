@@ -21,7 +21,8 @@ export class AuthService {
     },
   ];
 
-  private _currentUser: User | null = this.users[0];
+  // Do not auto-login any user on startup — begin with no authenticated user.
+  private _currentUser: User | null = null;
 
   get currentUser(): User | null {
     return this._currentUser;
@@ -65,31 +66,40 @@ export class AuthService {
 
   follow(userId: number): void {
     if (!this._currentUser || this._currentUser.id === userId) return;
-    const target = this.users.find((u) => u.id === userId);
-    if (!target) return;
 
-    if (!this._currentUser.following.includes(userId)) {
+    if (!this.isFollowing(userId)) {
       this._currentUser.following.push(userId);
-    }
-
-    if (!target.followers.includes(this._currentUser.id)) {
-      target.followers.push(this._currentUser.id);
     }
   }
 
   unfollow(userId: number): void {
     if (!this._currentUser || this._currentUser.id === userId) return;
-    const target = this.users.find((u) => u.id === userId);
-    if (!target) return;
 
     this._currentUser.following = this._currentUser.following.filter(
       (id) => id !== userId,
     );
-    target.followers = target.followers.filter((id) => id !== this._currentUser!.id);
   }
 
   isFollowing(userId: number): boolean {
     return !!this._currentUser?.following.includes(userId);
+  }
+
+  /**
+   * Gets a list of users who are following the given user.
+   */
+  getFollowers(userId: number): User[] {
+    return this.users.filter(user => user.following.includes(userId));
+  }
+
+  /**
+   * Gets a list of users that the given user is following.
+   */
+  getFollowing(userId: number): User[] {
+    const user = this.getUserById(userId);
+    if (!user) {
+      return [];
+    }
+    return this.users.filter(u => user.following.includes(u.id));
   }
 
   toggleSaveRecipe(recipeId: number): void {
@@ -105,13 +115,6 @@ export class AuthService {
 
   hasSavedRecipe(recipeId: number): boolean {
     return !!this._currentUser?.savedRecipeIds.includes(recipeId);
-  }
-
-  addPostedRecipe(recipeId: number): void {
-    if (!this._currentUser) return;
-    if (!this._currentUser.postedRecipeIds.includes(recipeId)) {
-      this._currentUser.postedRecipeIds.push(recipeId);
-    }
   }
 
   setMealPlan(day: Weekday, slot: MealSlot): void {

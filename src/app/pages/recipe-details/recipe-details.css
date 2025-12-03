@@ -62,3 +62,138 @@ h2 {
 .pill:hover {
   border-color: #222;
 }
+
+/* Comments section */
+.comments-section {
+  margin-top: 20px;
+}
+
+.comments-section h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.comments-section app-comment-input {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.comments-section app-comment-list {
+  display: block;
+}
+
+/* Reviews */
+.reviews-section {
+  margin-top: 20px;
+}
+
+.add-review {
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-review textarea {
+  min-height: 72px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.reviews-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review {
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #f3f3f3;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.review-text {
+  margin: 6px 0;
+}
+
+.review-date {
+  color: #999;
+  font-size: 12px;
+}
+
+/* Enhanced review visuals */
+.add-review label {
+  font-size: 13px;
+  color: #444;
+  font-weight: 600;
+}
+
+.add-review app-rating {
+  display: inline-block;
+  margin: 6px 0 4px 0;
+}
+
+.add-review textarea:focus {
+  box-shadow: 0 0 0 4px rgba(255,90,95,0.06);
+  border-color: rgba(255,90,95,0.4);
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-header strong {
+  font-size: 14px;
+  color: #222;
+}
+
+.review .rating-small {
+  transform: scale(0.9);
+}
+
+.reviews-list .review:nth-child(odd) {
+  background: #fbfbfb;
+}
+
+.primary {
+  background: #ff5a5f;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.primary:hover {
+  opacity: 0.95;
+}
+
+/* make rating inside reviews smaller */
+.review-header app-rating .stars { font-size: 18px; }
+
+/* reviewer avatar placeholder (if template later includes) */
+.review-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}

@@ -7,6 +7,14 @@ export interface Review {
   createdAt: Date;
 }
 
+export interface RecipeComment {
+  id: number;
+  userId: number;
+  userName: string;
+  text: string;
+  createdAt: Date;
+}
+
 export interface Recipe {
   id: number;
   title: string;
@@ -26,6 +34,7 @@ export interface Recipe {
   likes: number;
   likedByUserIds: number[];
   reviews: Review[];
+  comments: RecipeComment[];
 }
 
 

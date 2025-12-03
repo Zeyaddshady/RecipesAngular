@@ -20,4 +20,45 @@
   cursor: pointer;
 }
 
+/* Enhanced styles */
+.comment-input {
+  background: #fbfbfb;
+  border: 1px solid #eee;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.comment-input textarea {
+  min-height: 64px;
+  max-height: 220px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.comment-input textarea:focus {
+  box-shadow: 0 0 0 3px rgba(255,90,95,0.06);
+  border-color: rgba(255,90,95,0.5);
+}
+
+.comment-input .controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.comment-input button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.comment-input .hint {
+  color: #888;
+  font-size: 12px;
+}
+
 

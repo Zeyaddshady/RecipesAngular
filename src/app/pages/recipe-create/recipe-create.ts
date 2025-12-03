@@ -30,7 +30,12 @@ export class RecipeCreateComponent {
     private recipeService: RecipeService,
     private auth: AuthService,
     private router: Router,
-  ) {}
+  ) {
+    // It's better to redirect if the user isn't logged in at all.
+    if (!this.auth.currentUser) {
+      this.router.navigate(['/login']); // Or your login route
+    }
+  }
 
   save(): void {
     this.errorMessage = '';
@@ -40,7 +45,19 @@ export class RecipeCreateComponent {
       return;
     }
 
-    if (!this.title || !this.description || !this.ingredientsText || !this.stepsText) {
+    // More robust validation
+    const cookTime = Number(this.cookTimeMinutes);
+    const cals = Number(this.calories);
+
+    if (this.cookTimeMinutes && (isNaN(cookTime) || cookTime < 0)) {
+      this.errorMessage = 'Cook time must be a positive number.';
+      return;
+    }
+    if (this.calories && (isNaN(cals) || cals < 0)) {
+      this.errorMessage = 'Calories must be a positive number.';
+      return;
+    }
+    if (!this.title.trim() || !this.description.trim() || !this.ingredientsText.trim() || !this.stepsText.trim()) {
       this.errorMessage = 'Please fill in the title, description, ingredients and steps.';
       return;
     }
@@ -68,14 +85,13 @@ export class RecipeCreateComponent {
       steps,
       authorId: user.id,
       tags,
-      cuisine: this.cuisine || undefined,
-      cookTimeMinutes: this.cookTimeMinutes,
-      calories: this.calories,
+      cuisine: this.cuisine.trim() || undefined,
+      cookTimeMinutes: cookTime || undefined,
+      calories: cals || undefined,
       rating: 0,
     });
 
-    this.auth.addPostedRecipe(recipe.id);
-    this.router.navigate(['/recipes', recipe.id]);
+    this.router.navigate(['/profile']); // Navigate to profile to see the new post
   }
 
   onImageSelected(event: Event): void {
@@ -99,5 +115,3 @@ export class RecipeCreateComponent {
     reader.readAsDataURL(file);
   }
 }
-
-

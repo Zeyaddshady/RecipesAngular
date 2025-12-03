@@ -18,9 +18,12 @@ import { Subscription } from 'rxjs';
 export class UserProfileComponent implements OnInit, OnDestroy {
   postedRecipes: Recipe[] = [];
   savedRecipes: Recipe[] = [];
+  followers: User[] = [];
+  following: User[] = [];
   viewingUser?: User;
   isOwnProfile = false;
   isFollowing = false;
+  activeTab: 'recipes' | 'followers' | 'following' | 'saved' = 'recipes';
   private sub?: Subscription;
 
   constructor(
@@ -30,15 +33,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // This handles navigation to /profile/:id
     this.sub = this.route.paramMap.subscribe((params) => {
       const idParam = params.get('id');
       if (idParam) {
         const user = this.auth.getUserById(Number(idParam));
         this.setViewingUser(user ?? undefined);
-      } else {
-        this.setViewingUser(this.auth.currentUser ?? undefined);
       }
     });
+
+    // This handles navigation to the base /profile route for the current user
+    if (!this.route.snapshot.paramMap.has('id')) {
+      this.setViewingUser(this.auth.currentUser ?? undefined);
+    }
   }
 
   ngOnDestroy(): void {
@@ -55,6 +62,15 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.isFollowing = this.auth.isFollowing(this.viewingUser.id);
   }
 
+  deleteRecipe(recipeId: number): void {
+    // We only allow deleting from one's own profile
+    if (!this.isOwnProfile) return;
+
+    // Assuming RecipeService has a delete method
+    this.recipeService.delete(recipeId);
+    // Refresh the list of posted recipes
+    this.postedRecipes = this.recipeService.getByAuthor(this.viewingUser!.id);
+  }
   private setViewingUser(user: User | undefined): void {
     this.viewingUser = user;
     this.isOwnProfile =
@@ -64,6 +80,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.postedRecipes = [];
       this.savedRecipes = [];
       this.isFollowing = false;
+      this.followers = [];
+      this.following = [];
       return;
     }
 
@@ -72,5 +90,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       ? this.recipeService.getByIds(user.savedRecipeIds)
       : [];
     this.isFollowing = !this.isOwnProfile && this.auth.isFollowing(user.id);
+
+    this.followers = this.auth.getFollowers(user.id);
+    this.following = this.auth.getFollowing(user.id);
   }
 }

@@ -9,5 +9,5 @@ import { CommonModule, DatePipe } from '@angular/common';
   styleUrl: './comment-list.css',
 })
 export class CommentListComponent {
-  @Input() comments: { text: string; date: Date }[] = [];
+  @Input() comments: { text: string; date: Date; userName?: string }[] = [];
 }

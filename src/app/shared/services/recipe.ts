@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Recipe, Review } from '../models/recipe.model';
+import { Recipe, Review, RecipeComment } from '../models/recipe.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class RecipeService {
       id: 1,
       title: 'Chicken Alfredo',
       description: 'Creamy pasta with grilled chicken.',
-      image: 'assets/recipes/alfredo.jpg',
+      image: 'assets/alfredo.jpg',
       rating: 0,
       ingredients: ['Chicken breast', 'Pasta', 'Cream', 'Parmesan cheese', 'Garlic'],
       steps: [
@@ -29,12 +30,13 @@ export class RecipeService {
       likes: 3,
       likedByUserIds: [1],
       reviews: [],
+      comments: [],
     },
     {
       id: 2,
       title: 'Avocado Toast Deluxe',
       description: 'Crunchy toast topped with creamy avocado and poached egg.',
-      image: 'assets/recipes/avocado-toast.jpg',
+      image: 'assets/avocado.jpg',
       rating: 0,
       ingredients: ['Sourdough bread', 'Avocado', 'Egg', 'Lemon', 'Chili flakes'],
       steps: [
@@ -52,8 +54,11 @@ export class RecipeService {
       likes: 5,
       likedByUserIds: [1],
       reviews: [],
+      comments: [],
     },
   ];
+
+  constructor(private authService: AuthService) {}
 
   getAll(): Recipe[] {
     return this.recipes;
@@ -71,7 +76,7 @@ export class RecipeService {
     return this.recipes.filter((r) => ids.includes(r.id));
   }
 
-  createRecipe(data: Omit<Recipe, 'id' | 'createdAt' | 'likes' | 'likedByUserIds' | 'reviews'>): Recipe {
+  createRecipe(data: Omit<Recipe, 'id' | 'createdAt' | 'likes' | 'likedByUserIds' | 'reviews' | 'comments'>): Recipe {
     const nextId = this.recipes.length
       ? Math.max(...this.recipes.map((r) => r.id)) + 1
       : 1;
@@ -82,9 +87,48 @@ export class RecipeService {
       likes: 0,
       likedByUserIds: [],
       reviews: [],
+      comments: [],
     };
     this.recipes.unshift(recipe);
+
+    // Also update the user who created the recipe
+    const author = this.authService.getUserById(recipe.authorId);
+    if (author) {
+      author.postedRecipeIds.unshift(recipe.id);
+    }
+
     return recipe;
+  }
+
+  addComment(recipeId: number, payload: Omit<RecipeComment, 'id' | 'createdAt'>): Recipe | undefined {
+    const recipe = this.getById(recipeId);
+    if (!recipe) return;
+
+    const nextId = recipe.comments.length
+      ? Math.max(...recipe.comments.map((c) => c.id)) + 1
+      : 1;
+    const comment: RecipeComment = {
+      ...payload,
+      id: nextId,
+      createdAt: new Date(),
+    };
+    recipe.comments.unshift(comment);
+    return recipe;
+  }
+
+  delete(recipeId: number): void {
+    const recipeIndex = this.recipes.findIndex((r) => r.id === recipeId);
+    if (recipeIndex === -1) return;
+
+    const recipe = this.recipes[recipeIndex];
+    const author = this.authService.getUserById(recipe.authorId);
+
+    this.recipes.splice(recipeIndex, 1);
+
+    // Also remove the recipe from the author's list
+    if (author) {
+      author.postedRecipeIds = author.postedRecipeIds.filter((id) => id !== recipeId);
+    }
   }
 
   toggleLike(recipeId: number, userId: number): Recipe | undefined {
@@ -156,7 +200,8 @@ export class RecipeService {
         r.title.toLowerCase().includes(q) ||
         r.description.toLowerCase().includes(q) ||
         r.ingredients.some((i) => i.toLowerCase().includes(q)) ||
-        r.tags.some((t) => t.toLowerCase().includes(q));
+        r.tags.some((t) => t.toLowerCase().includes(q)) ||
+        !!r.cuisine && r.cuisine.toLowerCase().includes(q);
 
       const matchesCookTime =
         maxCookTime == null || (r.cookTimeMinutes ?? Infinity) <= maxCookTime;
